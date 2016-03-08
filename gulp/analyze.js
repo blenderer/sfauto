@@ -21,12 +21,12 @@ module.exports = function (gulp, $, config) {
         this.emit('end');
       }}))
       .pipe(es6Filter)
-      .pipe($.eslint())
-      .pipe($.eslint.formatEach('./node_modules/eslint-path-formatter'))
-      .pipe($.eslint.failOnError())
-      .pipe($.jshint())
-      .pipe($.jshint.reporter('jshint-stylish'))
-      .pipe($.jshint.reporter('fail'))
+      // .pipe($.eslint())
+      // .pipe($.eslint.formatEach('./node_modules/eslint-path-formatter'))
+      // .pipe($.eslint.failOnError())
+      // .pipe($.jshint())
+      // .pipe($.jshint.reporter('jshint-stylish'))
+      // .pipe($.jshint.reporter('fail'))
       .pipe($.jscs({
         esnext: true
       }));
