@@ -23,19 +23,36 @@
 
   function sfAcTypeHome() {
     return {
-      restrict: 'EA',
-      scope: {},
-      templateUrl: 'home/sf-ac-type-home-directive.tpl.html',
+      restrict: 'E',
+      scope: {
+        ac: '=ac'
+      },
       replace: false,
       controllerAs: 'sfAcTypeHome',
-      controller() {
-        let vm = this;
-        vm.name = 'sfAcTypeHome';
-      },
+      controller: HomeTypeController,
       link(scope, element, attrs) {
         /* jshint unused:false */
         /* eslint "no-unused-vars": [2, {"args": "none"}] */
+
       }
     };
+  }
+
+  HomeTypeController.$inject = ['$scope'];
+
+  function HomeTypeController($scope) {
+    let vm = this;
+    vm.name = 'hometype';
+    vm.ac = {
+      type: 'home',
+      onSelect: function(item) {
+        alert('selected item HOME');
+      },
+      onSubmitQuery: function(query) {
+        alert('submitted query HOME');
+      }
+    };
+
+    $scope.$emit('ac', vm.ac);
   }
 }());

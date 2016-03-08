@@ -5,7 +5,7 @@ describe('sfacinput', () => {
   let scope
     , element;
 
-  beforeEach(module('sfautocomplete', 'sfautocomplete/sfacinput-directive.tpl.html'));
+  beforeEach(module('sfautocomplete', 'sfautocomplete/sfacinput/sfacinput-directive.tpl.html'));
 
   beforeEach(inject(($compile, $rootScope) => {
     scope = $rootScope.$new();

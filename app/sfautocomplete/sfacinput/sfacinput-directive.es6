@@ -21,21 +21,32 @@
     .module('sfautocomplete')
     .directive('sfacinput', sfacinput);
 
+  InputController.$inject = ['$scope'];
+
   function sfacinput() {
     return {
-      restrict: 'EA',
+      restrict: 'E',
       scope: {},
-      templateUrl: 'sfautocomplete/sfacinput-directive.tpl.html',
+      templateUrl: 'sfautocomplete/sfacinput/sfacinput-directive.tpl.html',
       replace: false,
-      controllerAs: 'sfacinput',
-      controller() {
-        let vm = this;
-        vm.name = 'sfacinput';
-      },
+      transclude: true,
+      controllerAs: 'vm',
+      controller: InputController,
       link(scope, element, attrs) {
+
         /* jshint unused:false */
         /* eslint "no-unused-vars": [2, {"args": "none"}] */
       }
     };
+  }
+
+  function InputController($scope) {
+    let vm = this;
+    vm.name = 'sfacinput';
+    vm.ac;
+
+    $scope.$on('ac', function (e, ac) {
+      vm.ac = ac;
+    });
   }
 }());

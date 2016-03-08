@@ -5,7 +5,7 @@ describe('sfAcTypeHome', () => {
   let scope
     , element;
 
-  beforeEach(module('home', 'home/sf-ac-type-home-directive.tpl.html'));
+  beforeEach(module('home', 'home/sf-ac-type-home/sf-ac-type-home-directive.tpl.html'));
 
   beforeEach(inject(($compile, $rootScope) => {
     scope = $rootScope.$new();
