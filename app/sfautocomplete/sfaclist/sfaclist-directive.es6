@@ -25,7 +25,7 @@
     return {
       restrict: 'EA',
       scope: {},
-      templateUrl: 'sfautocomplete/sfaclist-directive.tpl.html',
+      templateUrl: 'sfautocomplete/sfaclist/sfaclist-directive.tpl.html',
       replace: false,
       controllerAs: 'sfaclist',
       controller() {

@@ -5,7 +5,7 @@ describe('sfaclist', () => {
   let scope
     , element;
 
-  beforeEach(module('sfautocomplete', 'sfautocomplete/sfaclist-directive.tpl.html'));
+  beforeEach(module('sfautocomplete', 'sfautocomplete/sfaclist/sfaclist-directive.tpl.html'));
 
   beforeEach(inject(($compile, $rootScope) => {
     scope = $rootScope.$new();
