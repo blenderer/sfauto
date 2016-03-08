@@ -32,7 +32,14 @@
       transclude: true,
       controllerAs: 'vm',
       controller: InputController,
-      link(scope, element, attrs) {
+      link(scope, element, attrs, controller) {
+
+        element[0].addEventListener('keypress', function(e) {
+          if (e.which === 13) {
+            console.log(controller.ac);
+            controller.ac.onSubmitQuery();
+          }
+        });
 
         /* jshint unused:false */
         /* eslint "no-unused-vars": [2, {"args": "none"}] */
