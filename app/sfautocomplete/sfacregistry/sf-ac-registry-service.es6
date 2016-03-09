@@ -36,6 +36,11 @@
           // add default properties to the autocomplete object
           autocomplete = this._addDefaults(autocomplete);
         }
+        else {
+          throw "Duplicate autocomplete name found, please rename your new instance"
+        }
+
+
       }
       else {
         throw "provided autocomplete is missing required methods/properties to be implemented"
@@ -44,14 +49,8 @@
       return autocomplete;
     }
 
-    cacheQuery(name, queryText, results) {
-      this.registry[name].cache[queryText] = results;
-    }
-
     _checkRequired(autocomplete) {
       let self = this;
-
-
 
       return true;
     }

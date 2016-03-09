@@ -150,22 +150,12 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    $rootScope.$on('sfac.register', function (e, register) {
-
-      // check if directive 'for' matches the event's name
-      if (vm.ac.name === register.name) {
-        vm.ac = register.ac;
-      }
+    $timeout(function() {
+      $rootScope.$emit('sfac.register', {
+        name: vm.ac.name,
+        ac: vm.ac
+      });
     });
 
-    if (!vm.alreadyRegistered) {
-      $timeout(function() {
-        $rootScope.$emit('sfac.register', {
-          name: vm.ac.name,
-          ac: vm.ac
-        });
-      });
-    }
-    
   }
 }());
