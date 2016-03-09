@@ -43,6 +43,7 @@
 
     vm.ac = {
       name: $scope.name,
+      placeholder: 'This is the home autocomplete',
       events: {
         onSelect: function(item) {
           alert('selected item: ' + item);
