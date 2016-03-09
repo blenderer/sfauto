@@ -50,12 +50,14 @@
     vm.ac;
     vm.select = select;
 
+    // listen for the register event to bind it to the list's self
     $rootScope.$on('sfac.register', function (e, register) {
       if ($scope.for === register.name) {
         vm.ac = register.ac;
       }
     });
 
+    // a click handler that selects the item
     function select(item) {
       vm.ac.events.onSelect(item);
     }

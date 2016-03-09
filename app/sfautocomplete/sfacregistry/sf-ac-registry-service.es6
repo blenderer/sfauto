@@ -5,8 +5,10 @@
 
     constructor() {
 
+      // this holds all of autocomplete instances
       this.registry = {};
 
+      // these events are required by the implementor or an error will be thrown
       this.requiredEvents = [
         'onType'
       ];
@@ -17,16 +19,21 @@
       ];
 
 
-
+      // required properties or an error will be thrown
       this.requiredProperties = [
         'name'
       ];
     }
 
     register(autocomplete) {
+
+      // first check if autocomplete has required fields
       if (this._checkRequired(autocomplete)) {
+
+        // add default properties to the autocomplete object
         autocomplete = this._addDefaults(autocomplete);
 
+        // register the autocomplete by name if it's not already registered
         if (!this.registry[autocomplete.name]) {
           this.registry[autocomplete.name] = autocomplete;
         }
@@ -40,10 +47,6 @@
       }
 
       return autocomplete;
-    }
-
-    get() {
-      return 'SfAcRegistry';
     }
 
     _checkRequired(autocomplete) {
@@ -61,12 +64,14 @@
         autocomplete.events = {};
       }
 
+      // add each optional event only if it's missing
       this.optionalEvents.forEach(function(eventName) {
         if (!autocomplete.events[eventName] || typeof autocomplete.events[eventName] !== 'function') {
           autocomplete.events[eventName] = function(){};
         }
       });
 
+      // add state and default options
       autocomplete.items = [];
       autocomplete.state = {
         selectedIndex: null,

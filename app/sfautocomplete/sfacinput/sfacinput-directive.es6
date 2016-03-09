@@ -36,6 +36,7 @@
         var parent = element[0];
         var input = parent.querySelector('input');
 
+        // Event bindings for the input
         input.addEventListener('keypress', handleKeypress);
         input.addEventListener('keyup', handleKeyup);
         input.addEventListener('focus', handleFocus);
@@ -43,14 +44,16 @@
 
         function handleKeypress(e) {
           let state = controller.ac.state;
-          if (e.which === 13) { //enter
+          if (e.which === 13) { // enter
+
+            // nothing is selected, a query is typed and they've pressed enter
             if (state.selectedIndex === null) {
 
               if (controller.ac.query.trim() !== "") {
                 controller.ac.events.onSubmitQuery(controller.ac.query);
               }
             }
-            else {
+            else { //they've arrow downed and pressed enter on an item
               let item = controller.ac.items[state.selectedIndex];
               controller.ac.events.onSelect(item);
             }
@@ -93,6 +96,8 @@
     vm.currentCall;
 
     $rootScope.$on('sfac.register', function (e, register) {
+
+      // check if directive 'for' matches the event's name
       if ($scope.for === register.name) {
         SfAcRegistry.register(register.ac);
         vm.ac = register.ac;
@@ -102,30 +107,36 @@
     vm.select = select;
     vm.typing = typing;
 
+    // function is called when someone clicks or arrow down/ups an item
     function select(item) {
       vm.ac.events.onSelect(item);
     }
 
+    // always fired when someone is typing
     function typing(searchText) {
       vm.ac.state.selectedIndex = null;
       vm.ac.items = [];
 
+      // Don't make a call if input has nothing
       if (searchText.trim() === '') {
         return false;
       }
 
+      // If there is a current timeout being executed, cancel it first
       if (vm.currentCall) {
         $timeout.cancel(vm.currentCall);
       }
 
+      // start a timeout according to the throttleLimit
       vm.currentCall = $timeout(function() {
-        
+
+        // q.when allows you to support regular functions and promise'd functions
         $q.when(vm.ac.events.onType(searchText)).then(function(results) {
           vm.ac.items = results;
         });
 
         vm.currentCall = undefined;
-      }, vm.ac.throttleLimit);
+      }, vm.ac.throttleLimit); // throttleLimit can be set by the directive user
 
     }
   }
