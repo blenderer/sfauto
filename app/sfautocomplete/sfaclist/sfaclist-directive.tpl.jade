@@ -1,1 +1,14 @@
-div {{sfaclist.name}}
+ul.ac-list(
+  ng-repeat="item in vm.ac.items",
+  ng-show="vm.ac.items.length > 0"
+)
+  li(
+    ng-bind="item",
+    ng-click="vm.select(item)",
+    ng-class="{'selected': vm.ac.selectedIndex === $index}"
+  )
+
+style.
+  .ac-list li.selected{
+    background-color: grey;
+  }

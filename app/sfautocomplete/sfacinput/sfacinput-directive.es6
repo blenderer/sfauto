@@ -21,7 +21,7 @@
     .module('sfautocomplete')
     .directive('sfacinput', sfacinput);
 
-  InputController.$inject = ['$scope'];
+  InputController.$inject = ['$rootScope'];
 
   function sfacinput() {
     return {
@@ -33,12 +33,39 @@
       controllerAs: 'vm',
       controller: InputController,
       link(scope, element, attrs, controller) {
+        var parent = element[0];
+        var input = parent.querySelector('input');
 
-        element[0].addEventListener('keypress', function(e) {
-          if (e.which === 13) {
-            console.log(controller.ac);
-            controller.ac.onSubmitQuery();
+        input.addEventListener('keypress', function(e) {
+          if (e.which === 13) { //enter
+            if (controller.ac.selectedIndex === null) {
+              controller.ac.onSubmitQuery(controller.ac.query);
+            }
+            else {
+              let item = controller.ac.items[controller.ac.selectedIndex];
+              controller.ac.onSelect(item);
+            }
           }
+        });
+
+        input.addEventListener('keyup', function(e) {
+          if (e.which === 38) { // up arrow
+            controller.ac.selectedIndex = decrementSelectedIndex(controller.ac.selectedIndex, controller.ac.items);
+            scope.$apply();
+          } else if (e.which === 40) { // down arrow
+            controller.ac.selectedIndex = incrementSelectedIndex(controller.ac.selectedIndex, controller.ac.items);
+            scope.$apply();
+          }
+        });
+
+        input.addEventListener('focus', function(e) {
+          controller.ac.focused = true;
+          scope.$apply();
+        });
+
+        input.addEventListener('blur', function(e) {
+          controller.ac.focused = false;
+          scope.$apply();
         });
 
         /* jshint unused:false */
@@ -47,13 +74,45 @@
     };
   }
 
-  function InputController($scope) {
+  function InputController($rootScope) {
     let vm = this;
-    vm.name = 'sfacinput';
     vm.ac;
 
-    $scope.$on('ac', function (e, ac) {
+    $rootScope.$on('ac', function (e, ac) {
       vm.ac = ac;
     });
+
+    vm.select = select;
+    vm.typing = typing;
+
+    function select(item) {
+      vm.ac.onSelect(item);
+    }
+
+    function typing(searchText) {
+      vm.ac.items = vm.ac.onType(searchText);
+    }
+  }
+
+  function incrementSelectedIndex(current, items) {
+    if (current === null) {
+      current = 0;
+    }
+    else if (current < items.length - 1) {
+      current++;
+    }
+
+    return current;
+  }
+
+  function decrementSelectedIndex(current, items) {
+    if (current > 0) {
+      current--;
+    }
+    else {
+      current = null;
+    }
+
+    return current;
   }
 }());

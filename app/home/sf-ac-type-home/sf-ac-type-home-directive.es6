@@ -24,9 +24,7 @@
   function sfAcTypeHome() {
     return {
       restrict: 'E',
-      scope: {
-        ac: '=ac'
-      },
+      scope: {},
       replace: false,
       controllerAs: 'sfAcTypeHome',
       controller: HomeTypeController,
@@ -38,21 +36,103 @@
     };
   }
 
-  HomeTypeController.$inject = ['$scope'];
+  HomeTypeController.$inject = ['$rootScope', '$timeout'];
 
-  function HomeTypeController($scope) {
+  function HomeTypeController($rootScope, $timeout) {
     let vm = this;
-    vm.name = 'hometype';
+
     vm.ac = {
       type: 'home',
       onSelect: function(item) {
-        alert('selected item HOME');
+        alert('selected item: ' + item);
       },
       onSubmitQuery: function(query) {
-        alert('submitted query HOME');
-      }
+        alert('submitted query: ' + query);
+      },
+      onType: function(searchText) {
+        if (searchText.trim() === "") {
+          return [];
+        }
+
+        let filteredList = vm.states.filter(function(item) {
+          return item.toLowerCase().match(searchText.toLowerCase())
+        });
+
+        let cutList = filteredList.slice(0, 6);
+
+        return cutList;
+      },
+      items: [],
+      selectedIndex: null,
+      focused: false,
+      maxItems: 6
     };
 
-    $scope.$emit('ac', vm.ac);
+    vm.states = [
+      'ALABAMA',
+      'ALASKA',
+      'AMERICAN SAMOA',
+      'ARIZONA',
+      'ARKANSAS',
+      'CALIFORNIA',
+      'COLORADO',
+      'CONNECTICUT',
+      'DELAWARE',
+      'DISTRICT OF COLUMBIA',
+      'FEDERATED STATES OF MICRONESIA',
+      'FLORIDA',
+      'GEORGIA',
+      'GUAM',
+      'HAWAII',
+      'IDAHO',
+      'ILLINOIS',
+      'INDIANA',
+      'IOWA',
+      'KANSAS',
+      'KENTUCKY',
+      'LOUISIANA',
+      'MAINE',
+      'MARSHALL ISLANDS',
+      'MARYLAND',
+      'MASSACHUSETTS',
+      'MICHIGAN',
+      'MINNESOTA',
+      'MISSISSIPPI',
+      'MISSOURI',
+      'MONTANA',
+      'NEBRASKA',
+      'NEVADA',
+      'NEW HAMPSHIRE',
+      'NEW JERSEY',
+      'NEW MEXICO',
+      'NEW YORK',
+      'NORTH CAROLINA',
+      'NORTH DAKOTA',
+      'NORTHERN MARIANA ISLANDS',
+      'OHIO',
+      'OKLAHOMA',
+      'OREGON',
+      'PALAU',
+      'PENNSYLVANIA',
+      'PUERTO RICO',
+      'RHODE ISLAND',
+      'SOUTH CAROLINA',
+      'SOUTH DAKOTA',
+      'TENNESSEE',
+      'TEXAS',
+      'UTAH',
+      'VERMONT',
+      'VIRGIN ISLANDS',
+      'VIRGINIA',
+      'WASHINGTON',
+      'WEST VIRGINIA',
+      'WISCONSIN',
+      'WYOMING'
+    ];
+
+
+    $timeout(function() {
+      $rootScope.$emit('ac', vm.ac);
+    });
   }
 }());
