@@ -18,7 +18,7 @@
    *
    */
   angular
-    .module('home')
+    .module('sfautocomplete')
     .directive('sfAcTypeHome', sfAcTypeHome);
 
   function sfAcTypeHome() {
@@ -43,31 +43,30 @@
 
     vm.ac = {
       name: $scope.name,
-      onSelect: function(item) {
-        alert('selected item: ' + item);
-      },
-      onSubmitQuery: function(query) {
-        alert('submitted query: ' + query);
-      },
-      onSelectedMove: function(item) {
+      events: {
+        onSelect: function(item) {
+          alert('selected item: ' + item);
+        },
+        onSubmitQuery: function(query) {
+          alert('submitted query: ' + query);
+        },
+        onSelectedMove: function(item) {
 
-      },
-      onType: function(searchText) {
-        if (searchText.trim() === "") {
-          return [];
+        },
+        onType: function(searchText) {
+          if (searchText.trim() === "") {
+            return [];
+          }
+
+          let filteredList = vm.states.filter(function(item) {
+            return item.toLowerCase().match(searchText.toLowerCase())
+          });
+
+          let cutList = filteredList.slice(0, 6);
+
+          return cutList;
         }
-
-        let filteredList = vm.states.filter(function(item) {
-          return item.toLowerCase().match(searchText.toLowerCase())
-        });
-
-        let cutList = filteredList.slice(0, 6);
-
-        return cutList;
-      },
-      items: [],
-      selectedIndex: null,
-      focused: false
+      }
     };
 
     vm.states = [
