@@ -1,16 +1,13 @@
 ul.ac-list(
-  ng-repeat="item in vm.ac.items",
   ng-show="vm.ac.items.length > 0 && vm.ac.state.focused"
 )
   li(
+    ng-repeat="item in vm.ac.items",
     ng-click="vm.select(item)",
     ng-class="{'selected': vm.ac.state.selectedIndex === $index}"
   )
-    sf-ac-list-item-template(item="item")
-      span(
-        ng-bind="item"
-      )
-
+    div(ng-transclude)
+      
 style.
   .ac-list li.selected{
     background-color: grey;

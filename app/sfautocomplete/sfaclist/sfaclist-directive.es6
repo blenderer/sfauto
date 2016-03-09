@@ -21,7 +21,7 @@
     .module('sfautocomplete')
     .directive('sfaclist', sfaclist);
 
-  function sfaclist() {
+  function sfaclist($compile) {
     return {
       restrict: 'E',
       scope: {
@@ -29,6 +29,7 @@
       },
       templateUrl: 'sfautocomplete/sfaclist/sfaclist-directive.tpl.html',
       replace: false,
+      transclude: true,
       controllerAs: 'vm',
       controller: ListController,
       link(scope, element, attrs) {
@@ -39,11 +40,14 @@
         function handleMouseDown(e) {
           e.preventDefault();
         }
-      }
+      },
     };
   }
 
   ListController.$inject = ['$rootScope', '$scope'];
+  sfaclist.$inject = ['$compile'];
+
+
 
   function ListController($rootScope, $scope) {
     let vm = this;
@@ -54,6 +58,7 @@
     $rootScope.$on('sfac.register', function (e, register) {
       if ($scope.for === register.name) {
         vm.ac = register.ac;
+        $scope.items = vm.ac.items;
       }
     });
 
