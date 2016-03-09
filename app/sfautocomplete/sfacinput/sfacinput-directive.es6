@@ -21,12 +21,14 @@
     .module('sfautocomplete')
     .directive('sfacinput', sfacinput);
 
-  InputController.$inject = ['$rootScope'];
+  InputController.$inject = ['$rootScope', '$scope'];
 
   function sfacinput() {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        name: '@name'
+      },
       templateUrl: 'sfautocomplete/sfacinput/sfacinput-directive.tpl.html',
       replace: false,
       transclude: true,
@@ -67,19 +69,18 @@
           controller.ac.focused = false;
           scope.$apply();
         });
-
-        /* jshint unused:false */
-        /* eslint "no-unused-vars": [2, {"args": "none"}] */
       }
     };
   }
 
-  function InputController($rootScope) {
+  function InputController($rootScope, $scope) {
     let vm = this;
     vm.ac;
 
-    $rootScope.$on('ac', function (e, ac) {
-      vm.ac = ac;
+    $rootScope.$on('sfac.register', function (e, register) {
+      if ($scope.name === register.name) {
+        vm.ac = register.ac;
+      }
     });
 
     vm.select = select;
@@ -90,6 +91,7 @@
     }
 
     function typing(searchText) {
+      vm.ac.selectedIndex = null;
       vm.ac.items = vm.ac.onType(searchText);
     }
   }

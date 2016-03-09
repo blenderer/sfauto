@@ -1,6 +1,6 @@
 ul.ac-list(
   ng-repeat="item in vm.ac.items",
-  ng-show="vm.ac.items.length > 0"
+  ng-show="vm.ac.items.length > 0 && vm.ac.focused"
 )
   li(
     ng-bind="item",

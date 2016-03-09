@@ -24,30 +24,33 @@
   function sfAcTypeHome() {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        name: '@name'
+      },
       replace: false,
       controllerAs: 'sfAcTypeHome',
       controller: HomeTypeController,
-      link(scope, element, attrs) {
-        /* jshint unused:false */
-        /* eslint "no-unused-vars": [2, {"args": "none"}] */
+      link(scope, element, attrs, controller) {
 
       }
     };
   }
 
-  HomeTypeController.$inject = ['$rootScope', '$timeout'];
+  HomeTypeController.$inject = ['$rootScope', '$timeout', '$scope'];
 
-  function HomeTypeController($rootScope, $timeout) {
+  function HomeTypeController($rootScope, $timeout, $scope) {
     let vm = this;
 
     vm.ac = {
-      type: 'home',
+      name: $scope.name,
       onSelect: function(item) {
         alert('selected item: ' + item);
       },
       onSubmitQuery: function(query) {
         alert('submitted query: ' + query);
+      },
+      onSelectedMove: function(item) {
+
       },
       onType: function(searchText) {
         if (searchText.trim() === "") {
@@ -64,8 +67,7 @@
       },
       items: [],
       selectedIndex: null,
-      focused: false,
-      maxItems: 6
+      focused: false
     };
 
     vm.states = [
@@ -132,7 +134,10 @@
 
 
     $timeout(function() {
-      $rootScope.$emit('ac', vm.ac);
+      $rootScope.$emit('sfac.register', {
+        name: vm.ac.name,
+        ac: vm.ac
+      });
     });
   }
 }());

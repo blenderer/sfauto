@@ -21,38 +21,41 @@
     .module('sfautocomplete')
     .directive('sfaclist', sfaclist);
 
-  ListController.$inject = ['$rootScope'];
+  ListController.$inject = ['$rootScope', '$scope'];
 
   function sfaclist() {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        name: '@name'
+      },
       templateUrl: 'sfautocomplete/sfaclist/sfaclist-directive.tpl.html',
       replace: false,
       controllerAs: 'vm',
       controller: ListController,
       link(scope, element, attrs) {
-        /* jshint unused:false */
-        /* eslint "no-unused-vars": [2, {"args": "none"}] */
+
+        // prevent other things from losing focus when clicking on this list
+        element[0].addEventListener('mousedown', function(e) {
+          e.preventDefault();
+        });
       }
     };
   }
 
-  function ListController($rootScope) {
+  function ListController($rootScope, $scope) {
     let vm = this;
     vm.ac;
+    vm.select = select;
 
-    $rootScope.$on('ac', function (e, ac) {
-      vm.ac = ac;
-      init();
+    $rootScope.$on('sfac.register', function (e, register) {
+      if ($scope.name === register.name) {
+        vm.ac = register.ac;
+      }
     });
 
-    function init() {
-      vm.select = select;
-
-      function select(item) {
-        vm.ac.onSelect(item);
-      }
+    function select(item) {
+      vm.ac.onSelect(item);
     }
   }
 }());
