@@ -34,9 +34,11 @@
       link(scope, element, attrs) {
 
         // prevent other things from losing focus when clicking on this list
-        element[0].addEventListener('mousedown', function(e) {
+        element[0].addEventListener('mousedown', handleMouseDown);
+
+        function handleMouseDown(e) {
           e.preventDefault();
-        });
+        }
       }
     };
   }
