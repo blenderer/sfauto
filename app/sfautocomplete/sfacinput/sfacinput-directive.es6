@@ -85,11 +85,12 @@
     };
   }
 
-  InputController.$inject = ['$rootScope', '$scope', 'SfAcRegistry', '$q'];
+  InputController.$inject = ['$rootScope', '$scope', 'SfAcRegistry', '$q', '$timeout'];
 
-  function InputController($rootScope, $scope, SfAcRegistry, $q) {
+  function InputController($rootScope, $scope, SfAcRegistry, $q, $timeout) {
     let vm = this;
     vm.ac;
+    vm.currentCall;
 
     $rootScope.$on('sfac.register', function (e, register) {
       if ($scope.for === register.name) {
@@ -107,11 +108,25 @@
 
     function typing(searchText) {
       vm.ac.state.selectedIndex = null;
-
       vm.ac.items = [];
-      $q.when(vm.ac.events.onType(searchText)).then(function(results) {
-        vm.ac.items = results;
-      });
+
+      if (searchText.trim() === '') {
+        return false;
+      }
+
+      if (vm.currentCall) {
+        $timeout.cancel(vm.currentCall);
+      }
+
+      vm.currentCall = $timeout(function() {
+        
+        $q.when(vm.ac.events.onType(searchText)).then(function(results) {
+          vm.ac.items = results;
+        });
+
+        vm.currentCall = undefined;
+      }, vm.ac.throttleLimit);
+
     }
   }
 
