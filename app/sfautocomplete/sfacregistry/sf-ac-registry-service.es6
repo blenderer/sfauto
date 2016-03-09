@@ -26,27 +26,26 @@
     }
 
     register(autocomplete) {
-
       // first check if autocomplete has required fields
       if (this._checkRequired(autocomplete)) {
-
-        // add default properties to the autocomplete object
-        autocomplete = this._addDefaults(autocomplete);
 
         // register the autocomplete by name if it's not already registered
         if (!this.registry[autocomplete.name]) {
           this.registry[autocomplete.name] = autocomplete;
-        }
-        else {
-          throw "provided autocomplete name is already registered, please choose a new name attribute"
-        }
 
+          // add default properties to the autocomplete object
+          autocomplete = this._addDefaults(autocomplete);
+        }
       }
       else {
         throw "provided autocomplete is missing required methods/properties to be implemented"
       }
 
       return autocomplete;
+    }
+
+    cacheQuery(name, queryText, results) {
+      this.registry[name].cache[queryText] = results;
     }
 
     _checkRequired(autocomplete) {
@@ -79,6 +78,7 @@
       };
       autocomplete.query = '';
       autocomplete.throttleLimit = autocomplete.throttleLimit || 160;
+      autocomplete.cache = {};
 
 
       return autocomplete;

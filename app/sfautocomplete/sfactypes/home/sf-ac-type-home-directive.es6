@@ -41,6 +41,8 @@
   function HomeTypeController($rootScope, $timeout, $scope, $q) {
     let vm = this;
 
+    vm.alreadyRegistered = false;
+
     vm.ac = {
       name: $scope.name,
       placeholder: 'This is the home autocomplete',
@@ -58,6 +60,7 @@
         onType: function(searchText) {
           var deferred = $q.defer();
 
+          console.log("Simulating a network call");
           setTimeout(function() {
             deferred.resolve(filterStates(searchText));
           }, getRandomIntInclusive(50, 650))
@@ -147,12 +150,22 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    $rootScope.$on('sfac.register', function (e, register) {
 
-    $timeout(function() {
-      $rootScope.$emit('sfac.register', {
-        name: vm.ac.name,
-        ac: vm.ac
-      });
+      // check if directive 'for' matches the event's name
+      if (vm.ac.name === register.name) {
+        vm.ac = register.ac;
+      }
     });
+
+    if (!vm.alreadyRegistered) {
+      $timeout(function() {
+        $rootScope.$emit('sfac.register', {
+          name: vm.ac.name,
+          ac: vm.ac
+        });
+      });
+    }
+    
   }
 }());

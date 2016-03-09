@@ -99,8 +99,7 @@
 
       // check if directive 'for' matches the event's name
       if ($scope.for === register.name) {
-        SfAcRegistry.register(register.ac);
-        vm.ac = register.ac;
+        vm.ac = SfAcRegistry.register(register.ac);
       }
     });
 
@@ -122,6 +121,11 @@
         return false;
       }
 
+      if (vm.ac.cache[searchText]) {
+        vm.ac.items = vm.ac.cache[searchText];
+        return false;
+      }
+
       // If there is a current timeout being executed, cancel it first
       if (vm.currentCall) {
         $timeout.cancel(vm.currentCall);
@@ -133,6 +137,7 @@
         // q.when allows you to support regular functions and promise'd functions
         $q.when(vm.ac.events.onType(searchText)).then(function(results) {
           vm.ac.items = results;
+          SfAcRegistry.cacheQuery(vm.ac.name, searchText, results);
         });
 
         vm.currentCall = undefined;
