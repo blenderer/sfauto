@@ -1,6 +1,8 @@
 div(ng-transclude)
-input(
-  placeholder="{{vm.ac.name}}",
-  ng-model="vm.ac.query",
-  ng-change="vm.typing(vm.ac.query)"
-)
+md-input-container(md-no-float)
+  input(
+    name="{{vm.ac.name}}",
+    ng-model="vm.ac.query",
+    ng-change="vm.typing(vm.ac.query)",
+    placeholder="{{vm.ac.placeholder}}"
+  )
