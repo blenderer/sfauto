@@ -94,6 +94,8 @@
     let vm = this;
     vm.ac;
     vm.currentCall;
+    vm.select = select;
+    vm.typing = typing;
 
     $rootScope.$on('sfac.register', function (e, register) {
 
@@ -102,9 +104,6 @@
         vm.ac = SfAcRegistry.register(register.ac);
       }
     });
-
-    vm.select = select;
-    vm.typing = typing;
 
     // function is called when someone clicks or arrow down/ups an item
     function select(item) {
