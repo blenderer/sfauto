@@ -25,7 +25,7 @@
     return {
       restrict: 'E',
       scope: {
-        name: '@name'
+        for: '@for'
       },
       templateUrl: 'sfautocomplete/sfaclist/sfaclist-directive.tpl.html',
       replace: false,
@@ -49,7 +49,7 @@
     vm.select = select;
 
     $rootScope.$on('sfac.register', function (e, register) {
-      if ($scope.name === register.name) {
+      if ($scope.for === register.name) {
         vm.ac = register.ac;
       }
     });

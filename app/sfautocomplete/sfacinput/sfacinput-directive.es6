@@ -25,7 +25,7 @@
     return {
       restrict: 'E',
       scope: {
-        name: '@name'
+        for: '@for'
       },
       templateUrl: 'sfautocomplete/sfacinput/sfacinput-directive.tpl.html',
       replace: false,
@@ -92,7 +92,7 @@
     vm.ac;
 
     $rootScope.$on('sfac.register', function (e, register) {
-      if ($scope.name === register.name) {
+      if ($scope.for === register.name) {
         SfAcRegistry.register(register.ac);
         vm.ac = register.ac;
       }
