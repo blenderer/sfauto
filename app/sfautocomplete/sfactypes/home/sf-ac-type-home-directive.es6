@@ -36,9 +36,9 @@
     };
   }
 
-  HomeTypeController.$inject = ['$rootScope', '$timeout', '$scope'];
+  HomeTypeController.$inject = ['$rootScope', '$timeout', '$scope', '$q'];
 
-  function HomeTypeController($rootScope, $timeout, $scope) {
+  function HomeTypeController($rootScope, $timeout, $scope, $q) {
     let vm = this;
 
     vm.ac = {
@@ -53,18 +53,15 @@
         onSelectedMove: function(item) {
 
         },
+        onTypeVanilla: filterStates,
         onType: function(searchText) {
-          if (searchText.trim() === "") {
-            return [];
-          }
+          var deferred = $q.defer();
 
-          let filteredList = vm.states.filter(function(item) {
-            return item.toLowerCase().match(searchText.toLowerCase())
-          });
+          setTimeout(function() {
+            deferred.resolve(filterStates(searchText));
+          }, getRandomIntInclusive(50, 650))
 
-          let cutList = filteredList.slice(0, 6);
-
-          return cutList;
+          return deferred.promise;
         }
       }
     };
@@ -130,6 +127,24 @@
       'WISCONSIN',
       'WYOMING'
     ];
+
+    function filterStates(searchText) {
+      if (searchText.trim() === "") {
+        return [];
+      }
+
+      let filteredList = vm.states.filter(function(item) {
+        return item.toLowerCase().match(searchText.toLowerCase())
+      });
+
+      let cutList = filteredList.slice(0, 6);
+
+      return cutList;
+    }
+
+    function getRandomIntInclusive(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
 
     $timeout(function() {

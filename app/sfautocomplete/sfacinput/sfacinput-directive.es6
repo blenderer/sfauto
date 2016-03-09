@@ -85,9 +85,9 @@
     };
   }
 
-  InputController.$inject = ['$rootScope', '$scope', 'SfAcRegistry'];
+  InputController.$inject = ['$rootScope', '$scope', 'SfAcRegistry', '$q'];
 
-  function InputController($rootScope, $scope, SfAcRegistry) {
+  function InputController($rootScope, $scope, SfAcRegistry, $q) {
     let vm = this;
     vm.ac;
 
@@ -107,7 +107,11 @@
 
     function typing(searchText) {
       vm.ac.state.selectedIndex = null;
-      vm.ac.items = vm.ac.events.onType(searchText);
+
+      vm.ac.items = [];
+      $q.when(vm.ac.events.onType(searchText)).then(function(results) {
+        vm.ac.items = results;
+      });
     }
   }
 
