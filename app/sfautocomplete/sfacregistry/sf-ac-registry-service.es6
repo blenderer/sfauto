@@ -73,6 +73,7 @@
         focused: false
       };
       autocomplete.query = '';
+      autocomplete.throttleLimit = autocomplete.throttleLimit || 160;
 
 
       return autocomplete;
