@@ -1,11 +1,11 @@
 ul.ac-list(
   ng-repeat="item in vm.ac.items",
-  ng-show="vm.ac.items.length > 0 && vm.ac.focused"
+  ng-show="vm.ac.items.length > 0 && vm.ac.state.focused"
 )
   li(
     ng-bind="item",
     ng-click="vm.select(item)",
-    ng-class="{'selected': vm.ac.selectedIndex === $index}"
+    ng-class="{'selected': vm.ac.state.selectedIndex === $index}"
   )
 
 style.

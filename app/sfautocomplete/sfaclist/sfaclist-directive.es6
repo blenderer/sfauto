@@ -21,8 +21,6 @@
     .module('sfautocomplete')
     .directive('sfaclist', sfaclist);
 
-  ListController.$inject = ['$rootScope', '$scope'];
-
   function sfaclist() {
     return {
       restrict: 'E',
@@ -43,6 +41,8 @@
     };
   }
 
+  ListController.$inject = ['$rootScope', '$scope'];
+
   function ListController($rootScope, $scope) {
     let vm = this;
     vm.ac;
@@ -55,7 +55,7 @@
     });
 
     function select(item) {
-      vm.ac.onSelect(item);
+      vm.ac.events.onSelect(item);
     }
   }
 }());

@@ -21,8 +21,6 @@
     .module('sfautocomplete')
     .directive('sfacinput', sfacinput);
 
-  InputController.$inject = ['$rootScope', '$scope'];
-
   function sfacinput() {
     return {
       restrict: 'E',
@@ -38,47 +36,64 @@
         var parent = element[0];
         var input = parent.querySelector('input');
 
-        input.addEventListener('keypress', function(e) {
+        input.addEventListener('keypress', handleKeypress);
+        input.addEventListener('keyup', handleKeyup);
+        input.addEventListener('focus', handleFocus);
+        input.addEventListener('blur', handleBlur);
+
+        function handleKeypress(e) {
+          let state = controller.ac.state;
           if (e.which === 13) { //enter
-            if (controller.ac.selectedIndex === null) {
-              controller.ac.onSubmitQuery(controller.ac.query);
+            if (state.selectedIndex === null) {
+
+              if (controller.ac.query.trim() !== "") {
+                controller.ac.events.onSubmitQuery(controller.ac.query);
+              }
             }
             else {
-              let item = controller.ac.items[controller.ac.selectedIndex];
-              controller.ac.onSelect(item);
+              let item = controller.ac.items[state.selectedIndex];
+              controller.ac.events.onSelect(item);
             }
           }
-        });
+        }
 
-        input.addEventListener('keyup', function(e) {
+        function handleKeyup(e) {
+          let state = controller.ac.state;
+
           if (e.which === 38) { // up arrow
-            controller.ac.selectedIndex = decrementSelectedIndex(controller.ac.selectedIndex, controller.ac.items);
-            scope.$apply();
+            state.selectedIndex = decrementSelectedIndex(state.selectedIndex, controller.ac.items);
+
           } else if (e.which === 40) { // down arrow
-            controller.ac.selectedIndex = incrementSelectedIndex(controller.ac.selectedIndex, controller.ac.items);
-            scope.$apply();
+            state.selectedIndex = incrementSelectedIndex(state.selectedIndex, controller.ac.items);
+
+          } else if (e.which === 27) { // escape
+            state.selectedIndex = null;
           }
-        });
-
-        input.addEventListener('focus', function(e) {
-          controller.ac.focused = true;
           scope.$apply();
-        });
+        }
 
-        input.addEventListener('blur', function(e) {
-          controller.ac.focused = false;
+        function handleFocus(e) {
+          controller.ac.state.focused = true;
           scope.$apply();
-        });
+        }
+
+        function handleBlur(e) {
+          controller.ac.state.focused = false;
+          scope.$apply();
+        }
       }
     };
   }
 
-  function InputController($rootScope, $scope) {
+  InputController.$inject = ['$rootScope', '$scope', 'SfAcRegistry'];
+
+  function InputController($rootScope, $scope, SfAcRegistry) {
     let vm = this;
     vm.ac;
 
     $rootScope.$on('sfac.register', function (e, register) {
       if ($scope.name === register.name) {
+        SfAcRegistry.register(register.ac);
         vm.ac = register.ac;
       }
     });
@@ -87,12 +102,12 @@
     vm.typing = typing;
 
     function select(item) {
-      vm.ac.onSelect(item);
+      vm.ac.events.onSelect(item);
     }
 
     function typing(searchText) {
-      vm.ac.selectedIndex = null;
-      vm.ac.items = vm.ac.onType(searchText);
+      vm.ac.state.selectedIndex = null;
+      vm.ac.items = vm.ac.events.onType(searchText);
     }
   }
 
